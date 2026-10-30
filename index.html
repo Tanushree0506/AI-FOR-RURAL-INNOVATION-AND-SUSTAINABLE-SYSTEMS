@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="KrishiSense (AI4RISS) — AI-Powered Agricultural Decision Support Platform for Farmers and Rural Communities.">
+    <meta name="theme-color" content="#059669">
+    <title>KrishiSense | Farm Intelligence & AI Platform (AI4RISS)</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Offline Notification Banner -->
+    <div id="offlineBanner" class="offline-banner hidden">
+        <span>⚡</span> You are offline. KrishiSense is operating in local edge-cache mode (Crop Advisor & on-device
+        tools remain active).
+    </div>
+
+    <!-- Collapsible Sidebar Navigation -->
+    <aside>
+        <div class="brand-wrapper">
+            <a href="#overview" class="brand-logo">
+                <div class="logo-icon">🌾</div>
+                <div>
+                    <div class="brand-title">KrishiSense</div>
+                    <span class="brand-subtitle">AI4RISS INTELLIGENCE</span>
+                </div>
+            </a>
+        </div>
+
+        <nav>
+            <div class="nav-section-title">Core Intelligence</div>
+            <a href="#overview" class="active"><span class="nav-icon">📊</span> Overview</a>
+            <a href="#panel-weather"><span class="nav-icon">🛰️</span> Live Weather (IMD)</a>
+            <a href="#panel-crop-recommendation"><span class="nav-icon">🌾</span> Crop Advisor (AI)</a>
+            <a href="#panel-pest"><span class="nav-icon">📷</span> Leaf Disease & IoT Lab</a>
+            <a href="#panel-sensors"><span class="nav-icon">📡</span> Soil & Sensors</a>
+
+            <div class="nav-section-title">Sustainability & Trade</div>
+            <a href="#panel-resource"><span class="nav-icon">💧</span> Resource Optimizer</a>
+            <a href="#panel-supply"><span class="nav-icon">🏪</span> Mandi & Supply Chain</a>
+            <a href="#panel-federated"><span class="nav-icon">🔒</span> Community FedAvg</a>
+            <a href="#panel-voice"><span class="nav-icon">🎙️</span> Voice Assistant</a>
+
+            <div class="nav-section-title">Farmer Account</div>
+            <a href="login.html"><span class="nav-icon">🌾</span> Farmer Login / Kisan ID</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-weather-pill">
+                <span>📍 Kolar, Karnataka</span>
+                <b style="color:#34D399;">Local plan ☀️</b>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Workspace Dashboard -->
+    <main id="overview">
+        <!-- Top App Header -->
+        <header class="app-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button id="menuToggleBtn" class="btn-icon menu-toggle-btn" aria-label="Toggle Navigation Menu">☰
+                    Menu</button>
+                <div class="header-title-block">
+                    <h1 id="greetingHeading">🌾 Good morning, Farmer</h1>
+                    <p>Real-time field telemetry & localized AI precision agriculture intelligence.</p>
+                </div>
+            </div>
+
+            <div class="header-controls">
+                <div id="networkStatusBadge" class="status-badge online">
+                    <span class="status-dot online"></span>
+                    <span>Edge Online</span>
+                </div>
+
+                <select id="headerLanguageSelect" class="lang-select" aria-label="Select Language">
+                    <option value="en">🇬🇧 English</option>
+                    <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                    <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                    <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                    <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                    <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+                    <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+                    <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+                    <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+                    <option value="sw">🇰🇪 Kiswahili</option>
+                    <option value="ha">🇳🇬 Hausa</option>
+                </select>
+
+                <button id="themeToggleBtn" class="btn-icon">🌙 Dark Mode</button>
+                <button id="pwaInstallBtn" class="btn-icon" style="display:none; background:#059669; color:#fff;">📲
+                    Install App</button>
+            </div>
+        </header>
+
+        <!-- Quick Scenario Presets Bar (Kolar Agro-Climatic Zone) -->
+        <div class="presets-bar">
+            <span class="presets-label">⚡ Kolar Crop Presets:</span>
+            <button class="preset-chip" onclick="applyPreset('kolar_tomato')">🍅 Kolar Tomato</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_chilli')">🌶️ Kolar Chilli (135d)</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_spinach')">🥬 Kolar Spinach (40d)</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_ragi')">🌾 Kolar Ragi</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_maize')">🌽 Kolar Maize</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_groundnut')">🥜 Kolar Groundnut</button>
+            <button class="preset-chip" onclick="applyPreset('kolar_pulses')">🫘 Kolar Red Gram</button>
+        </div>
+
+        <!-- Hero Priority Action Card -->
+        <section class="hero-card">
+            <div class="hero-content">
+                <span class="hero-tag">✨ TODAY'S PRIORITY & HARVEST OUTLOOK</span>
+                <h2>Find the Right Crop & Conserve 35% Water</h2>
+                <p>Run your soil N-P-K test through the localized on-device Naive Bayes model to evaluate matching cash
+                    crops, and activate MARL automated drip schedules.</p>
+                <div class="hero-actions">
+                    <a href="#panel-crop-recommendation" class="btn-primary">🌾 Run Crop Advisor →</a>
+                    <a href="#panel-pest" class="btn-secondary">📷 Scan Pest Photo</a>
+                    <a href="#panel-voice" class="btn-secondary">🎙️ Voice Assistant</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics Quad Grid -->
+        <section class="metrics-grid">
+            <article class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Yield Outlook</span>
+                    <div class="metric-icon">📈</div>
+                </div>
+                <div class="metric-value" id="metricYield">+38.1%</div>
+                <div class="metric-sub">↑ vs regional seasonal baseline</div>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Water Conserved</span>
+                    <div class="metric-icon">💧</div>
+                </div>
+                <div class="metric-value" id="metricWater">35%</div>
+                <div class="metric-sub">smart MARL drip schedule</div>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Pest Health Index</span>
+                    <div class="metric-icon">🛡️</div>
+                </div>
+                <div class="metric-value" id="metricPest">96%</div>
+                <div class="metric-sub">YOLO edge diagnostic confidence</div>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Logistics Cost Saved</span>
+                    <div class="metric-icon">🚚</div>
+                </div>
+                <div class="metric-value" id="metricLogistics">15%</div>
+                <div class="metric-sub">Dijkstra mandi shortest path</div>
+            </article>
+        </section>
+
+        <!-- Main Dashboard Bento Grid -->
+        <section class="dashboard-grid">
+
+            <!-- 0. Real-Time Meteorological Intelligence Station (IMD / Open-Meteo REST API) -->
+            <section class="panel-card panel-full" id="panel-weather">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">🛰️</div>
+                        <div>
+                            <h3>Real-Time Weather Station & Atmospheric Intelligence</h3>
+                            <p>Live REST integration with IMD & Open-Meteo · Instant GPS auto-detection & 7-day ensemble forecast</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-real" id="weatherSourceBadge">🟢 IMD / OPEN-METEO LIVE</span>
+                        <button class="btn-icon" onclick="window.refreshLiveWeather()" title="Refresh Weather Telemetry">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <!-- Location Search & GPS Detection Bar -->
+                    <div class="weather-search-bar-row">
+                        <form id="weatherLocationForm" class="weather-search-form" onsubmit="event.preventDefault();">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="weatherLocationInput" class="form-input" placeholder="Search any city, district or village (e.g. Kolar, Bengaluru, Ludhiana, Nashik, Guntur)...">
+                                <button type="submit" class="btn-primary" style="padding:8px 16px; font-size:12px;">Search Place</button>
+                            </div>
+                        </form>
+
+                        <button type="button" id="useLocationBtn" class="btn-secondary" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:8px 14px; font-size:12px;">
+                            <span>📍</span> Detect Live GPS
+                        </button>
+                    </div>
+
+                    <!-- Quick Location Presets -->
+                    <div class="weather-presets-row">
+                        <span style="font-size:11px; font-weight:700; color:var(--text-muted);">Quick Regions:</span>
+                        <button type="button" class="preset-chip" onclick="window.searchWeatherLocation('Kolar, Karnataka')">📍 Kolar, KA</button>
+                        <button type="button" class="preset-chip" onclick="window.searchWeatherLocation('Bengaluru, Karnataka')">📍 Bengaluru</button>
+                        <button type="button" class="preset-chip" onclick="window.searchWeatherLocation('Ludhiana, Punjab')">📍 Ludhiana, PB</button>
+                        <button type="button" class="preset-chip" onclick="window.searchWeatherLocation('Nashik, Maharashtra')">📍 Nashik, MH</button>
+                        <button type="button" class="preset-chip" onclick="window.searchWeatherLocation('Guntur, Andhra Pradesh')">📍 Guntur, AP</button>
+                    </div>
+
+                    <!-- Status Notification Line -->
+                    <div id="weatherStatus" class="weather-status">Connecting to meteorological satellite stream…</div>
+
+                    <!-- Main Current Weather Display Card -->
+                    <div class="weather-live-hero-card">
+                        <div class="weather-hero-main">
+                            <div class="weather-hero-location">
+                                <span class="weather-source-pill" id="weatherSource">Live forecast</span>
+                                <h2 id="weatherLocationName" style="font-size:24px; font-weight:800; margin:6px 0 2px;">Kolar, Karnataka</h2>
+                                <p id="weatherCurrentCondition" style="color:rgba(255,255,255,0.85); font-size:13px; font-weight:600;">🌤️ Partly Cloudy · Feels like 29°C</p>
+                            </div>
+                            <div class="weather-hero-temp" id="weatherCurrentTemp">28°C</div>
+                        </div>
+
+                        <div class="weather-hero-metrics-grid">
+                            <div class="weather-metric-pill" id="weatherHumidity">💧 Humidity 65%</div>
+                            <div class="weather-metric-pill" id="weatherWind">💨 Wind 14 km/h</div>
+                            <div class="weather-metric-pill" id="weatherRain">🌧️ Precipitation 0.0 mm</div>
+                            <div class="weather-metric-pill" id="weatherRainProb">☔ Rain Probability 15%</div>
+                        </div>
+                    </div>
+
+                    <!-- 7-Day High-Resolution Forecast Stream -->
+                    <div style="margin-top:20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="font-size:13px; font-weight:700; color:var(--text-main); text-transform:uppercase; letter-spacing:0.04em;">📅 7-Day Atmospheric & Rainfall Ensemble</h4>
+                            <span style="font-size:11px; color:var(--text-muted);">Synced automatically with ML Crop Advisor</span>
+                        </div>
+                        <div class="weather-forecast" id="weatherForecast"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Crop Recommendation Advisor (Real On-Device Model) -->
+            <section class="panel-card panel-full" id="panel-crop-recommendation">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">🌾</div>
+                        <div>
+                            <h3>Crop Advisor & Soil Matching</h3>
+                            <p>Gaussian Naive Bayes (2,200 trained records) · Runs 100% locally in-browser</p>
+                        </div>
+                    </div>
+                    <span class="ai-badge badge-real">⚡ REAL ON-DEVICE MODEL</span>
+                </div>
+                <div class="panel-card-body">
+                    <form id="cropRecommendationForm">
+                        <p class="model-scale-note" style="color:var(--primary); font-weight:600; background:rgba(16, 185, 129, 0.08); padding:10px 14px; border-radius:8px; border-left:3px solid var(--primary); margin-bottom:18px;">
+                            ✅ <b>Model Calibrated for Kolar, Karnataka (Zone 5 Eastern Dry Zone):</b> The Gaussian Naive Bayes model is trained with Kolar red sandy loam soil nutrient distributions (N, P₂O₅, K₂O, pH) and localized regional cash crops (Tomato, Ragi, Maize, Groundnut, Pulses).
+                        </p>
+                        
+                        <div class="form-grid-4">
+                            <div class="form-group">
+                                <label>Model nitrogen (N) <span class="unit" id="nitrogenValDisplay">92</span></label>
+                                <input type="range" class="form-range" name="nitrogen" min="0" max="140" value="92">
+                            </div>
+                            <div class="form-group">
+                                <label>Model phosphorus (P) <span class="unit" id="phosphorusValDisplay">50</span></label>
+                                <input type="range" class="form-range" name="phosphorus" min="5" max="145" value="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Model potassium (K) <span class="unit" id="potassiumValDisplay">70</span></label>
+                                <input type="range" class="form-range" name="potassium" min="5" max="205" value="70">
+                            </div>
+                            <div class="form-group">
+                                <label>Model soil pH <span class="unit" id="phValDisplay">6.4</span> (0–14)</label>
+                                <input type="range" class="form-range" name="ph" min="3.5" max="9.5" step="0.1" value="6.4">
+                            </div>
+                        </div>
+
+                        <div class="form-grid-3" style="margin-top:12px;">
+                            <div class="form-group">
+                                <label>Ambient Temperature <span class="unit" id="temperatureValDisplay">27.5</span> °C</label>
+                                <input type="range" class="form-range" name="temperature" min="8" max="45" step="0.5" value="27.5">
+                            </div>
+                            <div class="form-group">
+                                <label>Air Humidity <span class="unit" id="humidityValDisplay">54</span> %</label>
+                                <input type="range" class="form-range" name="humidity" min="14" max="100" value="54">
+                            </div>
+                            <div class="form-group">
+                                <label>Expected seasonal rainfall <span class="unit" id="rainfallValDisplay">20</span> mm</label>
+                                <input type="range" class="form-range" name="rainfall" min="10" max="300" value="20">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="max-width:320px; margin-top:12px;">
+                            <label for="planStartDate">Planned planting / transplant date</label>
+                            <input id="planStartDate" class="form-input" type="date" name="planStartDate" value="2026-09-01">
+                        </div>
+
+                        <section class="kolar-soil-test" aria-labelledby="kolarSoilTestTitle" style="margin-top:18px;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                                <div>
+                                    <h4 id="kolarSoilTestTitle" style="font-size:15px; font-weight:700; margin:0 0 2px;">Kolar field soil-test context</h4>
+                                </div>
+                                <p style="font-size:12px; color:var(--text-muted); margin:0;">These actual field values personalise your alerts and 90-day plan. They do not change the current crop-match score.</p>
+                            </div>
+                            <div class="form-grid-4">
+                                <div class="form-group">
+                                    <label for="kolarNitrogen">Available N (kg/ha)</label>
+                                    <input id="kolarNitrogen" class="form-input" type="number" name="kolarNitrogen" min="100" max="400" value="240">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kolarPhosphorus">Available P₂O₅ (kg/ha)</label>
+                                    <input id="kolarPhosphorus" class="form-input" type="number" name="kolarPhosphorus" min="10" max="150" value="45">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kolarPotassium">Available K₂O (kg/ha)</label>
+                                    <input id="kolarPotassium" class="form-input" type="number" name="kolarPotassium" min="100" max="500" value="220">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kolarPh">Field pH</label>
+                                    <input id="kolarPh" class="form-input" type="number" name="kolarPh" min="5" max="8" step="0.01" value="6.45">
+                                </div>
+                            </div>
+                        </section>
+
+                        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:10px;">
+                            <button type="submit" class="btn-primary">Generate Recommended Crop Plan →</button>
+                        </div>
+                    </form>
+
+                    <div id="cropRecommendationResult"></div>
+                </div>
+            </section>
+
+            <!-- 2. Pest & Disease Vision Scanner & Knowx IoT Precision Lab -->
+            <section class="panel-card" id="panel-pest">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">📷</div>
+                        <div>
+                            <h3>AI Crop Stage Leaf Disease & IoT Diagnostic Lab</h3>
+                            <p>Multi-stage leaf pathology classifier & Knowx IoT precision edge telemetry</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-vision">👁️ MOBILENETV3 + YOLOV8</span>
+                        <button class="btn-icon btn-refresh" data-panel="pest" title="Simulate New Scan" onclick="updatePestDetection(null)">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <!-- Stage & Crop Selection Toolbar -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:14px; background:var(--bg-card-alt); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border);">
+                        <div>
+                            <label style="font-size:11px; font-weight:800; color:var(--text-muted); display:block; margin-bottom:4px;">🌾 TARGET CROP</label>
+                            <select id="stageCropSelect" class="form-input" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600;">
+                                <option value="Tomato">🍅 Tomato (Solanaceae)</option>
+                                <option value="Chilli">🌶️ Chilli / Pepper (Capsicum)</option>
+                                <option value="Spinach">🥬 Spinach / Palak (Leafy)</option>
+                                <option value="Ragi">🌾 Ragi (Finger Millet)</option>
+                                <option value="Maize">🌽 Maize (Corn)</option>
+                                <option value="Groundnut">🥜 Groundnut (Peanut)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:800; color:var(--text-muted); display:block; margin-bottom:4px;">🌱 CROP GROWTH STAGE</label>
+                            <select id="cropGrowthStageSelect" class="form-input" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600;">
+                                <option value="Vegetative">🌿 Vegetative Stage (Canopy Expansion)</option>
+                                <option value="Seedling">🌱 Seedling / Nursery Stage (0-20d)</option>
+                                <option value="Flowering & Fruit Set">🌸 Flowering & Fruit / Pod Set</option>
+                                <option value="Maturity / Harvest">🌾 Maturity / Pre-Harvest Flush</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pest-scan-wrapper">
+                        <div>
+                            <input type="file" id="pestImageInput" accept="image/*" style="display:none;">
+                            <div class="pest-upload-box" id="pestUploadArea">
+                                <span class="pest-upload-icon">📸</span>
+                                <b>Drag & drop farm leaf photo</b>
+                                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">or click to upload from camera/gallery</p>
+
+                                <div class="sample-pests-row" onclick="event.stopPropagation();" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;">
+                                    <span style="font-size:10px; font-weight:700; color:var(--text-subtle); width:100%;">⚡ Quick Stage Samples:</span>
+                                    <button type="button" class="sample-pest-btn" onclick="document.getElementById('stageCropSelect').value='Tomato'; document.getElementById('cropGrowthStageSelect').value='Vegetative'; updatePestDetection(null);">🍅 Tomato Early Blight</button>
+                                    <button type="button" class="sample-pest-btn" onclick="document.getElementById('stageCropSelect').value='Chilli'; document.getElementById('cropGrowthStageSelect').value='Vegetative'; updatePestDetection(null);">🌶️ Chilli Leaf Curl</button>
+                                    <button type="button" class="sample-pest-btn" onclick="document.getElementById('stageCropSelect').value='Spinach'; document.getElementById('cropGrowthStageSelect').value='Vegetative'; updatePestDetection(null);">🥬 Spinach Downy Mildew</button>
+                                    <button type="button" class="sample-pest-btn" onclick="document.getElementById('stageCropSelect').value='Ragi'; document.getElementById('cropGrowthStageSelect').value='Flowering & Fruit Set'; updatePestDetection(null);">🌾 Ragi Neck Blast</button>
+                                    <button type="button" class="sample-pest-btn" onclick="document.getElementById('stageCropSelect').value='Maize'; document.getElementById('cropGrowthStageSelect').value='Vegetative'; updatePestDetection(null);">🌽 Maize Armyworm</button>
+                                </div>
+                            </div>
+
+                            <div class="pest-diagnosis-info" style="margin-top:12px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <span id="diseasePathogenType" style="font-size:11px; font-weight:800; color:var(--primary); background:rgba(16,185,129,0.1); padding:2px 8px; border-radius:12px;">Fungal Pathogen</span>
+                                    <span id="pestSeverity" class="severity-pill severity-high">High Severity</span>
+                                </div>
+                                <h4 id="pestName" style="font-size:16px; margin-bottom:4px; font-weight:800; color:var(--text-main);">Early Blight (Alternaria solani)</h4>
+                                <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">
+                                    Confidence: <b id="pestConfidence" style="color:var(--primary)">96.2%</b> ·
+                                    Damage: <b id="leafCoverageDisplay" style="color:#F59E0B">22.5% Leaf Area</b> ·
+                                    Clusters: <b id="pestCount">3</b>
+                                </p>
+                                
+                                <div style="border-top:1px solid var(--border); padding-top:8px;" id="pestTreatment">
+                                    <div style="margin-bottom:6px;"><b>🌱 Organic Biocontrol:</b> Trichoderma harzianum @ 5g/L + Neem Oil 10,000 ppm @ 3 ml/L.</div>
+                                    <div style="color:var(--text-main);"><b>🧪 Chemical Remedy:</b> Mancozeb 75% WP @ 2g/L or Azoxystrobin 23% SC @ 1 ml/L.</div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; padding-top:8px; border-top:1px solid var(--border); font-size:11px;">
+                                    <div>
+                                        <span style="color:var(--text-muted); font-weight:700;">⏱️ Pre-Harvest Interval (PHI):</span>
+                                        <div id="phiDaysDisplay" style="font-weight:800; color:#0284C7;">7 Days</div>
+                                    </div>
+                                    <div>
+                                        <span style="color:var(--text-muted); font-weight:700;">🧪 Application Dosage:</span>
+                                        <div id="chemicalDosageDisplay" style="font-weight:700; color:var(--text-main);">Spray early morning</div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top:8px; padding:8px; background:var(--bg-card-alt); border-radius:6px; font-size:11px; color:var(--text-muted);">
+                                    <b>🛰️ IoT Weather Trigger:</b> <span id="iotTriggerDisplay">RH > 80% with warm day temperatures (24-29°C) and prolonged leaf wetness.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pest-canvas-container">
+                            <div class="scanner-laser"></div>
+                            <canvas id="pestCanvas" width="360" height="270" style="border-radius:var(--radius-md); background:#0F2519;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Knowx Innovations Smart Agriculture IoT Hardware Blueprint -->
+                    <div style="margin-top:16px; background:linear-gradient(135deg, #091910 0%, #030D07 100%); border:1px solid rgba(16,185,129,0.3); border-radius:var(--radius-lg); padding:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:20px;">🔬</span>
+                                <div>
+                                    <h4 style="margin:0; font-size:14px; color:#FFFFFF; font-weight:800;">Knowx IoT Precision Farming Hardware Stack</h4>
+                                    <p style="margin:0; font-size:11px; color:#A7F3D0;">Field-deployed ESP32 Edge Vision + RS485 Modbus NPK + LoRaWAN SX1278 (868MHz)</p>
+                                </div>
+                            </div>
+                            <span style="font-size:11px; font-weight:800; color:#10B981; background:rgba(16,185,129,0.15); padding:3px 10px; border-radius:20px;">⚡ 48-50% WATER SAVED</span>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px; font-size:11px;">
+                            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px;">
+                                <div style="color:#10B981; font-weight:800; margin-bottom:4px;">📡 ESP32-CAM Edge AI</div>
+                                <div style="color:#D1D5DB;">MobileNetV3 on-device inference (<150ms). Zero cloud latency leaf disease detection.</div>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px;">
+                                <div style="color:#38BDF8; font-weight:800; margin-bottom:4px;">🧪 RS485 Modbus Probe</div>
+                                <div style="color:#D1D5DB;">Soil NPK (mg/kg), moisture, temp, and pH telemetry with 15-day battery cycle.</div>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px;">
+                                <div style="color:#FBBF24; font-weight:800; margin-bottom:4px;">📻 LoRa SX1278 Mesh</div>
+                                <div style="color:#D1D5DB;">Long-range 5-10 km wireless telemetry to farmer gateway without 4G dependency.</div>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px;">
+                                <div style="color:#A855F7; font-weight:800; margin-bottom:4px;">💧 PPO Solenoid Valve</div>
+                                <div style="color:#D1D5DB;">Automated relay actuation pulsing drip lines according to evapotranspiration curves.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Soil & Field Sensors Telemetry (ST-GNN) -->
+            <section class="panel-card" id="panel-sensors">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">📡</div>
+                        <div>
+                            <h3>Field Conditions & Sensors</h3>
+                            <p>ST-GNN telemetry fusion · 15% data gap adaptive imputation</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-simulated">🔬 ST-GNN FUSION</span>
+                        <button class="btn-icon btn-refresh" data-panel="sensors" title="Refresh Telemetry">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <div class="sensor-tiles-grid">
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Soil Moisture</span> <span>Zone 1</span></div>
+                            <div class="sensor-tile-val" id="sensorMoisture">42%</div>
+                            <div class="sensor-meter">
+                                <div id="sensorMoistureFill" class="sensor-meter-fill" style="width:42%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Temperature</span> <span>Ambient</span></div>
+                            <div class="sensor-tile-val" id="sensorTemp">29.4°C</div>
+                            <div class="sensor-meter">
+                                <div id="sensorTempFill" class="sensor-meter-fill" style="width:58%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Humidity</span> <span>Relative</span></div>
+                            <div class="sensor-tile-val" id="sensorHumidity">65%</div>
+                            <div class="sensor-meter">
+                                <div id="sensorHumidityFill" class="sensor-meter-fill" style="width:65%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Soil pH</span> <span>Root Zone</span></div>
+                            <div class="sensor-tile-val" id="sensorPH">6.4</div>
+                            <div class="sensor-meter">
+                                <div id="sensorPHFill" class="sensor-meter-fill" style="width:64%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>NDVI Vigor</span> <span>Sentinel-2</span></div>
+                            <div class="sensor-tile-val" id="sensorNDVI">0.74</div>
+                            <div class="sensor-meter">
+                                <div id="sensorNDVIFill" class="sensor-meter-fill" style="width:74%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Data Gap Fill</span> <span>Imputation</span></div>
+                            <div class="sensor-tile-val" id="sensorGap">8%</div>
+                            <div class="sensor-meter">
+                                <div id="sensorGapFill" class="sensor-meter-fill" style="width:32%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Soil Temp (0-10cm)</span> <span>ERA5-Land</span></div>
+                            <div class="sensor-tile-val" id="sensorSoilTemp">23.8°C</div>
+                            <div class="sensor-meter">
+                                <div id="sensorSoilTempFill" class="sensor-meter-fill" style="width:68%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Solar Radiation</span> <span>NASA POWER</span></div>
+                            <div class="sensor-tile-val" id="sensorSolar">21.4 MJ</div>
+                            <div class="sensor-meter">
+                                <div id="sensorSolarFill" class="sensor-meter-fill" style="width:71%"></div>
+                            </div>
+                        </div>
+                        <div class="sensor-tile">
+                            <div class="sensor-tile-header"><span>Soil Classification</span> <span>SoilGrids</span></div>
+                            <div class="sensor-tile-val" style="font-size:12px; font-weight:800; color:var(--primary);">Red Sandy Loam</div>
+                            <div class="sensor-meter">
+                                <div class="sensor-meter-fill" style="width:90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 5. Resource & Irrigation Optimizer (MARL PPO) -->
+            <section class="panel-card" id="panel-resource">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">💧</div>
+                        <div>
+                            <h3>Resource & Irrigation Advisor</h3>
+                            <p>Multi-Agent PPO policy optimizing water and NPK fertilizer dosage</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-simulated">✨ MARL PPO</span>
+                        <button class="btn-icon btn-refresh" data-panel="resource"
+                            title="Re-optimize Resources">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <div class="resource-summary-box">
+                        <div class="resource-metric">
+                            <small>Irrigation Volume</small>
+                            <b id="resIrrigation" style="color:#0284C7">12 mm</b>
+                        </div>
+                        <div class="resource-metric">
+                            <small>Nitrogen (N)</small>
+                            <b id="resNitrogen">27 kg/ha</b>
+                        </div>
+                        <div class="resource-metric">
+                            <small>Phosphorus (P)</small>
+                            <b id="resPhosphorus">18 kg/ha</b>
+                        </div>
+                        <div class="resource-metric">
+                            <small>Potassium (K)</small>
+                            <b id="resPotassium">22 kg/ha</b>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background:var(--bg-card-alt); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <small style="color:var(--text-muted); font-weight:700;">RECOMMENDED DRIP SCHEDULE</small>
+                            <h4 id="resIrrigationDuration"
+                                style="font-size:15px; color:var(--text-main); margin-top:2px;">78 mins (Drip Zone 1)
+                            </h4>
+                        </div>
+                        <button class="btn-primary" style="padding:8px 14px; font-size:12px;"
+                            onclick="alert('Drip Valve automated trigger signal queued.')">⚡ Trigger Valve</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Mandi & Supply Chain Intelligence (GCN + Dijkstra) -->
+            <section class="panel-card" id="panel-supply">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">🏪</div>
+                        <div>
+                            <h3>Agri-Market Access & Mandi Matching</h3>
+                            <p>GCN buyer-seller pricing and Dijkstra freight cost optimizer</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-simulated">🚚 GCN + DIJKSTRA</span>
+                        <button class="btn-icon btn-refresh" data-panel="supply" title="Refresh Market">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <div class="mandi-filter-bar" style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input type="text" id="mandiSearchInput" class="form-input"
+                            placeholder="🔍 Search crop (e.g. Tomato, Mango, Ragi, Capsicum)..." style="flex:2; min-width:180px;">
+                        <select id="mandiTalukSelect" class="form-input" style="flex:1; min-width:140px; background:var(--bg-card-alt); color:var(--text-main); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 12px;">
+                            <option value="">🏛️ All Kolar Mandis</option>
+                            <option value="Kolar">📍 Kolar APMC</option>
+                            <option value="Srinivaspur">🥭 Srinivaspur APMC (Mango)</option>
+                            <option value="Bangarpet">🌾 Bangarpet APMC</option>
+                            <option value="Mulbagal">🥜 Mulbagal APMC</option>
+                            <option value="Malur">🌶️ Malur APMC</option>
+                        </select>
+                    </div>
+
+                    <div class="mandi-table-wrapper">
+                        <table class="mandi-table">
+                            <thead>
+                                <tr>
+                                    <th>Mandi / Yard</th>
+                                    <th>Crop</th>
+                                    <th>Modal Price</th>
+                                    <th>Buyer Lead</th>
+                                    <th>Distance</th>
+                                    <th>Freight</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mandiTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <canvas id="supplyChart" width="560" height="130"
+                        style="width:100%; border-radius:var(--radius-md); background:var(--bg-card-alt); margin-top:14px;"></canvas>
+                </div>
+            </section>
+
+            <!-- 7. Multilingual Voice Assistant -->
+            <section class="panel-card" id="panel-voice">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">🎙️</div>
+                        <div>
+                            <h3>Multilingual Agricultural Voice Advisor</h3>
+                            <p>Speech-to-Text & Text-to-Speech across 12 Indian regional languages</p>
+                        </div>
+                    </div>
+                    <span class="ai-badge badge-real">⚡ SPEECH AI ENGINE</span>
+                </div>
+                <div class="panel-card-body">
+                    <div class="voice-hud">
+                        <div
+                            style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:10px;">
+                            <select id="voiceLang" class="lang-select"
+                                style="background:#13241C; color:#fff; border-color:#233D30;">
+                                <option value="en">🇬🇧 English</option>
+                                <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                                <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                                <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                                <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                                <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                                <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+                                <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+                                <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+                                <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+                                <option value="sw">🇰🇪 Kiswahili</option>
+                                <option value="ha">🇳🇬 Hausa</option>
+                            </select>
+
+                            <button id="voiceAskBtn" class="btn-primary" style="background:#10B981; color:#FFFFFF;">🎙️
+                                Speak Now</button>
+                            <button id="voiceStopBtn" class="btn-secondary">⏹ Stop</button>
+                        </div>
+
+                        <div class="voice-wave-container">
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                        </div>
+
+                        <div class="voice-transcript-card" id="voiceTranscript">
+                            Tap "Speak Now" or choose a quick prompt chip below to hear agricultural recommendations.
+                        </div>
+                    </div>
+
+                    <div class="voice-quick-chips">
+                        <button class="chip-btn action-chip" data-query="crop">🌾 Crop suitability status</button>
+                        <button class="chip-btn action-chip" data-query="pest">🐛 Pest alert & remedy</button>
+                        <button class="chip-btn action-chip" data-query="weather">☀️ Weather & rain forecast</button>
+                        <button class="chip-btn action-chip" data-query="market">💰 Mandi commodity prices</button>
+                        <button class="chip-btn action-chip" data-query="irrigation">💧 Irrigation advice</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Privacy-Preserving Federated Learning & System Logs -->
+            <section class="panel-card" id="panel-federated">
+                <div class="panel-card-header">
+                    <div class="panel-title-group">
+                        <div class="panel-icon-badge">🔒</div>
+                        <div>
+                            <h3>Community Model (FedAvg ε=2.1) & Logs</h3>
+                            <p>Differential Privacy edge aggregation across 284 decentralized farm clients</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="ai-badge badge-simulated">🔒 FEDAVG (DP)</span>
+                        <button class="btn-icon btn-refresh" data-panel="federated"
+                            title="Simulate Fed Round">↻</button>
+                    </div>
+                </div>
+                <div class="panel-card-body">
+                    <div class="sensor-tiles-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:14px;">
+                        <div class="sensor-tile">
+                            <small style="color:var(--text-muted); font-size:10px;">Model Accuracy</small>
+                            <b id="fedAccuracy" style="font-size:16px; color:var(--primary);">92.6%</b>
+                        </div>
+                        <div class="sensor-tile">
+                            <small style="color:var(--text-muted); font-size:10px;">Edge Clients</small>
+                            <b id="fedClients" style="font-size:16px;">284</b>
+                        </div>
+                        <div class="sensor-tile">
+                            <small style="color:var(--text-muted); font-size:10px;">Fed Rounds</small>
+                            <b id="fedRounds" style="font-size:16px;">12 (Done)</b>
+                        </div>
+                        <div class="sensor-tile">
+                            <small style="color:var(--text-muted); font-size:10px;">Privacy Budget</small>
+                            <b id="fedPrivacy" style="font-size:16px; color:#84CC16;">ε = 2.1</b>
+                        </div>
+                    </div>
+
+                    <canvas id="fedChart" width="560" height="110"
+                        style="width:100%; border-radius:var(--radius-md); background:var(--bg-card-alt); margin-bottom:14px;"></canvas>
+
+                    <div id="statusLogFeed" class="status-log-feed"></div>
+                </div>
+            </section>
+
+        </section>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/pwa.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/sensors.js"></script>
+    <script src="js/yield-forecast.js"></script>
+    <script src="js/crop-recommendation.js"></script>
+    <script src="js/pest-detection.js"></script>
+    <script src="js/resource-optimizer.js"></script>
+    <script src="js/supply-chain.js"></script>
+    <script src="js/federated-learning.js"></script>
+    <script src="js/voice-interface.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Preset applicator helper
+        function applyPreset(presetType) {
+            const form = document.getElementById('cropRecommendationForm');
+            if (!form) return;
+
+            const presetCrops = {
+                kolar_tomato: 'tomato',
+                kolar_chilli: 'chilli',
+                kolar_spinach: 'spinach',
+                kolar_ragi: 'ragi',
+                kolar_maize: 'maize',
+                kolar_pulses: 'pigeonpeas',
+                kolar_groundnut: 'groundnut',
+                kharif_paddy: 'rice',
+                cotton_loam: 'cotton',
+                rabi_chickpea: 'chickpea',
+                drought_arid: 'ragi'
+            };
+
+            const presets = {
+                kolar_tomato: { nitrogen: 95, phosphorus: 54, potassium: 75, ph: 6.4, temperature: 25.5, humidity: 65, rainfall: 90 },
+                kolar_chilli: { nitrogen: 100, phosphorus: 55, potassium: 60, ph: 6.5, temperature: 24.5, humidity: 68, rainfall: 85 },
+                kolar_spinach: { nitrogen: 60, phosphorus: 40, potassium: 40, ph: 6.8, temperature: 18.5, humidity: 60, rainfall: 65 },
+                kolar_ragi: { nitrogen: 45, phosphorus: 35, potassium: 40, ph: 6.4, temperature: 26.5, humidity: 62, rainfall: 75 },
+                kolar_maize: { nitrogen: 80, phosphorus: 48, potassium: 38, ph: 6.4, temperature: 25.0, humidity: 64, rainfall: 95 },
+                kolar_pulses: { nitrogen: 22, phosphorus: 65, potassium: 28, ph: 6.5, temperature: 27.5, humidity: 52, rainfall: 85 },
+                kolar_groundnut: { nitrogen: 25, phosphorus: 48, potassium: 35, ph: 6.5, temperature: 27.0, humidity: 58, rainfall: 85 },
+                kharif_paddy: { nitrogen: 80, phosphorus: 48, potassium: 40, ph: 6.5, temperature: 24, humidity: 82, rainfall: 236 },
+                cotton_loam: { nitrogen: 118, phosphorus: 46, potassium: 20, ph: 6.9, temperature: 24, humidity: 80, rainfall: 80 },
+                rabi_chickpea: { nitrogen: 40, phosphorus: 68, potassium: 80, ph: 7.3, temperature: 19, humidity: 17, rainfall: 80 },
+                drought_arid: { nitrogen: 22, phosphorus: 48, potassium: 20, ph: 6.8, temperature: 28, humidity: 53, rainfall: 51 }
+            };
+
+            const data = presets[presetType];
+            if (data) {
+                Object.entries(data).forEach(([key, val]) => {
+                    const input = form.elements[key];
+                    if (input) {
+                        input.value = val;
+                        const display = document.getElementById(`${key}ValDisplay`);
+                        if (display) display.textContent = val;
+                    }
+                });
+                
+                const cropName = presetCrops[presetType];
+                if (window.selectActiveCrop && cropName) {
+                    window.selectActiveCrop(cropName);
+                } else {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            }
+        }
+
+        function selectSamplePest(pestType) {
+            if (window.updatePestDetection) {
+                window.updatePestDetection(null);
+            }
+        }
+    </script>
+
+    <!-- Farmer Mandi Dealer Connect Modal -->
+    <div id="farmerDealerModal" class="guided-modal-backdrop">
+        <div class="guided-modal-card" style="max-width: 520px;">
+            <div class="guided-modal-header">
+                <span class="guided-step-badge">🤝 APMC DEALER DIRECT CONNECT</span>
+                <button type="button" class="btn-close-modal" onclick="SupplyChain.closeConnectModal()">✕</button>
+            </div>
+            <div style="padding: 4px 0 16px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; background:var(--bg-card-alt); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border);">
+                    <div style="font-size:28px;">🏛️</div>
+                    <div style="flex:1;">
+                        <h4 id="modalDealerName" style="margin:0; font-size:15px; color:var(--text-main); font-weight:800;">Sri Byraveshwara Tomato Traders</h4>
+                        <div id="modalMandiName" style="font-size:12px; color:var(--text-muted);">APMC Market Yard, Kolar</div>
+                        <div style="font-size:11px; margin-top:2px;">
+                            <span style="color:var(--primary); font-weight:700;">Rate: <span id="modalModalRate">₹1,450/q</span></span> • 
+                            <span style="color:var(--text-muted);">Phone: <span id="modalDealerPhone">+91 98450 12345</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="farmerDealerForm" onsubmit="SupplyChain.submitFarmerConnection(event)" style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Farmer Name *</label>
+                            <input type="text" id="farmerNameInput" class="form-input" placeholder="e.g. Ramesh Kumar" required style="width:100%; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Mobile Phone *</label>
+                            <input type="tel" id="farmerPhoneInput" class="form-input" placeholder="e.g. 98450 XXXXX" required style="width:100%; font-size:13px;">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Village / Location in Kolar *</label>
+                            <input type="text" id="farmerVillageInput" class="form-input" placeholder="e.g. Vokkaleri, Kolar" required style="width:100%; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Crop Commodity</label>
+                            <input type="text" id="farmerCropInput" class="form-input" placeholder="e.g. Tomato" style="width:100%; font-size:13px;">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Quantity (Quintals) *</label>
+                            <input type="number" id="farmerQtyInput" class="form-input" value="15" min="1" max="1000" step="0.5" required style="width:100%; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Expected Price ₹/q (Optional)</label>
+                            <input type="number" id="farmerPriceInput" class="form-input" placeholder="Leave blank for modal" style="width:100%; font-size:13px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Notes / Pickup Requirement</label>
+                        <input type="text" id="farmerNotesInput" class="form-input" placeholder="e.g. Ready for harvest tomorrow, require transport vehicle" style="width:100%; font-size:13px;">
+                    </div>
+
+                    <div id="connectStatusBox" style="display:none; margin-top:6px;"></div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                        <button type="button" class="btn btn-secondary" onclick="SupplyChain.closeConnectModal()" style="font-size:13px;">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="font-size:13px; font-weight:700;">🚀 Connect & Direct Chat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

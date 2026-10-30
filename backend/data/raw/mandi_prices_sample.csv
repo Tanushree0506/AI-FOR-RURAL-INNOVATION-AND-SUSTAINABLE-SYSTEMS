@@ -1,0 +1,13 @@
+state,district,market_name,commodity,variety,arrival_tonnes,min_price_rs_quintal,max_price_rs_quintal,modal_price_rs_quintal,date
+Karnataka,Dharwad,Hubballi APMC,Cotton,DCH-32,142.5,6900,7850,7450,2026-08-30
+Karnataka,Dharwad,Dharwad Market,Maize,Hybrid Yellow,85.0,2050,2290,2180,2026-08-30
+Karnataka,Raichur,Raichur Cotton Yard,Paddy,Sona Masuri,320.0,2150,2450,2320,2026-08-30
+Karnataka,Gadag,Gadag Pulse Exchange,Chickpea (Bengal Gram),Desi,64.2,5400,6100,5800,2026-08-30
+Karnataka,Belagavi,Belagavi Agro Yard,Sugarcane,CO-86032,540.0,3000,3300,3150,2026-08-30
+Maharashtra,Nagpur,Nagpur Mandi,Soybean,JS-335,210.0,4300,4750,4580,2026-08-30
+Maharashtra,Nashik,Lasalgaon Mandi,Onion,Red Nashik,450.0,1800,2600,2250,2026-08-30
+Punjab,Ludhiana,Ludhiana Grain Market,Wheat,HD-2967,380.0,2275,2350,2300,2026-08-30
+Madhya Pradesh,Indore,Indore APMC,Wheat,Sharbati,290.0,2800,3400,3150,2026-08-30
+Gujarat,Rajkot,Rajkot APMC,Groundnut,GG-20,175.0,5800,6600,6250,2026-08-30
+Andhra Pradesh,Guntur,Guntur Mirchi Yard,Chilli,Teja,190.0,14500,19800,17200,2026-08-30
+Tamil Nadu,Erode,Erode Mandi,Turmeric,Salem Erode,110.0,12000,15400,13800,2026-08-30

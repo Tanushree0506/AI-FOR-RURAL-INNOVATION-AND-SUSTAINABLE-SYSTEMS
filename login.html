@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="KrishiSense Farmer Login Portal — Secure Access via Mobile OTP or Kisan ID / AgriStack.">
+    <meta name="theme-color" content="#059669">
+    <title>Farmer Sign In | KrishiSense (AI4RISS)</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* Dedicated Login Page Styles */
+        .auth-page-wrapper {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(132, 204, 22, 0.08) 0%, transparent 40%),
+                        var(--bg-page);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .auth-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 32px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: var(--bg-card-glass);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .auth-nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .auth-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .auth-card-glass {
+            width: 100%;
+            max-width: 540px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg), 0 0 35px rgba(5, 150, 105, 0.08);
+            padding: 32px 28px;
+            position: relative;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+        }
+
+        .auth-card-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-card-header .auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary);
+            background: var(--primary-subtle);
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .auth-card-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .auth-card-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Two-Way Login Tabs */
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-page);
+            padding: 5px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
+
+        .auth-tab-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: var(--font);
+        }
+
+        .auth-tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .auth-tab-btn:hover:not(.active) {
+            color: var(--text-main);
+        }
+
+        /* Forms Layout */
+        .auth-form-panel {
+            display: none;
+            animation: fadeInTab 0.3s ease;
+        }
+
+        .auth-form-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .form-input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 16px;
+            color: var(--text-subtle);
+            pointer-events: none;
+        }
+
+        .phone-prefix-tag {
+            position: absolute;
+            left: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-right: 8px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            pointer-events: none;
+        }
+
+        .auth-input {
+            width: 100%;
+            height: 46px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 14px 0 42px;
+            font-size: 14px;
+            color: var(--text-main);
+            font-family: var(--font);
+            transition: all 0.2s ease;
+        }
+
+        .auth-input.phone-input {
+            padding-left: 72px;
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* 6-Digit OTP Box Grid */
+        .otp-inputs-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .otp-digit {
+            width: 52px;
+            height: 56px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--primary);
+            transition: all 0.2s ease;
+        }
+
+        .otp-digit:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Simulated SMS Banner */
+        .simulated-sms-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.05));
+            border: 1px dashed var(--amber);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .otp-highlight {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 14px;
+            color: #D97706;
+            background: #FEF3C7;
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        [data-theme="dark"] .otp-highlight {
+            background: #78350F;
+            color: #FDE68A;
+        }
+
+        /* Quick Demo Farmers Section */
+        .demo-farmers-box {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .demo-farmers-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .demo-farmers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .demo-farmer-card {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .demo-farmer-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-subtle);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .demo-farmer-avatar {
+            font-size: 22px;
+        }
+
+        .demo-farmer-info h5 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .demo-farmer-info small {
+            font-size: 10px;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        /* Trust footer */
+        .auth-trust-footer {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-subtle);
+            flex-wrap: wrap;
+        }
+
+        .trust-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-full {
+            width: 100%;
+            height: 46px;
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .resend-timer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-link-action {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .btn-link-action:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .auth-nav { padding: 14px 16px; }
+            .auth-card-glass { padding: 24px 16px; }
+            .demo-farmers-grid { grid-template-columns: 1fr; }
+            .otp-digit { width: 42px; height: 48px; font-size: 18px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-page-wrapper">
+        <!-- Top Navigation -->
+        <header class="auth-nav">
+            <a href="index.html" class="auth-nav-logo">
+                <div class="logo-icon">🌾</div>
+                <div>
+                    <div class="brand-title" style="font-size:18px;">KrishiSense</div>
+                    <span class="brand-subtitle">AI4RISS IDENTITY PORTAL</span>
+                </div>
+            </a>
+
+            <div class="auth-nav-actions">
+                <select id="loginLangSelect" class="lang-select" aria-label="Select Language">
+                    <option value="en">🇬🇧 English</option>
+                    <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                    <option value="kn" selected>🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                    <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                    <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                    <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+                    <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+                </select>
+
+                <button id="themeToggleBtn" class="btn-icon">🌙 Dark</button>
+                <a href="index.html" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;">← Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Main Auth Container -->
+        <main class="auth-container">
+            <div class="auth-card-glass">
+                <div class="auth-card-header">
+                    <div class="auth-badge">
+                        <span>🛡️</span> <span id="portalBadgeText">OFFICIAL FARMER LOGIN</span>
+                    </div>
+                    <h2 id="loginMainTitle">Welcome to KrishiSense</h2>
+                    <p id="loginSubTitle">Choose your preferred login method to access localized AI farm intelligence</p>
+                </div>
+
+                <!-- Two-Way Login Tabs -->
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab-btn active" id="tabBtnOTP" onclick="switchLoginTab('otp')" role="tab" aria-selected="true">
+                        <span>📱</span> <span id="tabOtpLabel">Mobile & OTP</span>
+                    </button>
+                    <button class="auth-tab-btn" id="tabBtnKisan" onclick="switchLoginTab('kisan')" role="tab" aria-selected="false">
+                        <span>🌾</span> <span id="tabKisanLabel">Kisan ID & PIN</span>
+                    </button>
+                </div>
+
+                <!-- Status / Alert Message Container -->
+                <div id="authAlertBox" style="display:none; margin-bottom:16px;"></div>
+
+                <!-- ================= TAB 1: MOBILE OTP LOGIN ================= -->
+                <div id="panelOTP" class="auth-form-panel active">
+                    <!-- Step 1: Phone Input Form -->
+                    <form id="phoneStepForm" onsubmit="handleSendOTP(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="farmerMobileInput">
+                                <span>📱 Registered Mobile Number</span>
+                                <span style="color:var(--primary); font-size:11px;">Fast 1-Step Login</span>
+                            </label>
+                            <div class="form-input-with-icon">
+                                <span class="phone-prefix-tag">🇮🇳 +91</span>
+                                <input type="tel" id="farmerMobileInput" class="auth-input phone-input"
+                                    placeholder="98450 12345" maxlength="10" pattern="[0-9]{10}" required autofocus>
+                            </div>
+                            <small style="color:var(--text-muted); font-size:11px; margin-top:4px; display:block;">
+                                We'll send a 6-digit verification code to your phone.
+                            </small>
+                        </div>
+
+                        <button type="submit" id="btnSendOTP" class="btn btn-primary btn-full">
+                            <span>📲 Get Verification OTP</span>
+                        </button>
+                    </form>
+
+                    <!-- Step 2: OTP Verification Container (Hidden until OTP sent) -->
+                    <div id="otpStepContainer" style="display:none; margin-top:16px;">
+                        <!-- Simulated SMS Toast / Preview -->
+                        <div id="simulatedSmsToast" class="simulated-sms-banner">
+                            <span style="font-size:18px;">📩</span>
+                            <div>
+                                <b>Govt SMS Gateway:</b> Your KrishiSense verification code is
+                                <span id="smsOtpCodeDisplay" class="otp-highlight">123456</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="text-align:center;">
+                            <label class="form-label" style="justify-content:center; margin-bottom:4px;">
+                                <span>Enter 6-Digit OTP sent to +91 <span id="targetPhoneDisplay" style="font-family:var(--font-mono); font-weight:700;">98450 12345</span></span>
+                            </label>
+                            <button type="button" class="btn-link-action" onclick="changePhoneNumber()">Change number</button>
+
+                            <!-- 6 Individual Digit Inputs with Auto-Focus -->
+                            <div class="otp-inputs-grid">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_0">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_1">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_2">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_3">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_4">
+                                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" id="otp_5">
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnVerifyOTP" onclick="handleVerifyOTP()" class="btn btn-primary btn-full">
+                            <span>🚀 Verify & Access Dashboard</span>
+                        </button>
+
+                        <div class="resend-timer-text">
+                            <span id="timerPrefix">Resend code in:</span>
+                            <b id="countdownTimerDisplay" style="color:var(--primary); font-family:var(--font-mono);">00:45</b>
+                            <button type="button" id="btnResendOTP" class="btn-link-action" style="display:none; margin-left:6px;" onclick="handleResendOTP()">Resend OTP</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= TAB 2: KISAN ID LOGIN ================= -->
+                <div id="panelKisan" class="auth-form-panel">
+                    <form id="kisanLoginForm" onsubmit="handleKisanLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="kisanIdInput">
+                                <span>🌾 Kisan ID / Farmer Registration No.</span>
+                                <span style="color:var(--text-subtle); font-size:11px;">e.g. KA-KOL-8891</span>
+                            </label>
+                            <div class="form-input-with-icon">
+                                <span class="input-prefix-icon">🆔</span>
+                                <input type="text" id="kisanIdInput" class="auth-input"
+                                    placeholder="Enter your Kisan ID (e.g. KA-KOL-8891)" required
+                                    style="text-transform:uppercase; font-family:var(--font-mono); font-weight:700;">
+                            </div>
+                            <small style="color:var(--text-muted); font-size:11px; margin-top:4px; display:block;">
+                                Linked with PM-KISAN, AgriStack, or District Agriculture Office.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="kisanPinInput">
+                                <span>🔒 4-Digit Kisan Security PIN</span>
+                                <span style="color:var(--text-subtle); font-size:11px;">Demo PIN: 1234</span>
+                            </label>
+                            <div class="form-input-with-icon">
+                                <span class="input-prefix-icon">🔑</span>
+                                <input type="password" id="kisanPinInput" class="auth-input"
+                                    placeholder="••••" maxlength="8" required
+                                    style="letter-spacing:0.2em; font-family:var(--font-mono); font-weight:800;">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btnKisanSubmit" class="btn btn-primary btn-full">
+                            <span>🌾 Sign In with Kisan ID</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Quick Demo Farmers Selector -->
+                <div class="demo-farmers-box">
+                    <div class="demo-farmers-header">
+                        <span style="font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">
+                            ⚡ 1-Click Demo Profiles (Instant Test)
+                        </span>
+                        <span style="font-size:10px; color:var(--primary); font-weight:700;">Click any card to login</span>
+                    </div>
+
+                    <div class="demo-farmers-grid">
+                        <div class="demo-farmer-card" onclick="quickFillAndLogin('KA-KOL-8891')">
+                            <span class="demo-farmer-avatar">👨‍🌾</span>
+                            <div class="demo-farmer-info">
+                                <h5>Ramesh Gowda</h5>
+                                <small>Kolar • Tomato & Chilli</small>
+                                <small style="font-family:var(--font-mono); color:var(--primary);">ID: KA-KOL-8891</small>
+                            </div>
+                        </div>
+
+                        <div class="demo-farmer-card" onclick="quickFillAndLogin('KA-BLR-4421')">
+                            <span class="demo-farmer-avatar">👩‍🌾</span>
+                            <div class="demo-farmer-info">
+                                <h5>Sunita Devi</h5>
+                                <small>Hoskote • Organic Veg</small>
+                                <small style="font-family:var(--font-mono); color:var(--primary);">ID: KA-BLR-4421</small>
+                            </div>
+                        </div>
+
+                        <div class="demo-farmer-card" onclick="quickFillAndLogin('PB-LDH-1092')">
+                            <span class="demo-farmer-avatar">👳‍♂️</span>
+                            <div class="demo-farmer-info">
+                                <h5>Harpreet Singh</h5>
+                                <small>Ludhiana • Wheat & Paddy</small>
+                                <small style="font-family:var(--font-mono); color:var(--primary);">ID: PB-LDH-1092</small>
+                            </div>
+                        </div>
+
+                        <div class="demo-farmer-card" onclick="quickFillAndLogin('KA-CKB-7730')">
+                            <span class="demo-farmer-avatar">👨‍🌾</span>
+                            <div class="demo-farmer-info">
+                                <h5>Gopala Krishna</h5>
+                                <small>Sidlaghatta • Mulberry & FPO</small>
+                                <small style="font-family:var(--font-mono); color:var(--primary);">ID: KA-CKB-7730</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust and Certification Badges -->
+                <div class="auth-trust-footer">
+                    <span class="trust-badge-item">🔒 256-Bit SSL Encrypted</span>
+                    <span>•</span>
+                    <span class="trust-badge-item">🏛️ PM-KISAN Verified</span>
+                    <span>•</span>
+                    <span class="trust-badge-item">⚡ Edge Offline Ready</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script>
+        // State
+        let currentTab = 'otp';
+        let activePhone = '';
+        let timerInterval = null;
+
+        // Language Localizations for Login Page
+        const loginTranslations = {
+            en: {
+                badge: "OFFICIAL FARMER LOGIN",
+                title: "Welcome to KrishiSense",
+                subtitle: "Choose your preferred login method to access localized AI farm intelligence",
+                tabOtp: "Mobile & OTP",
+                tabKisan: "Kisan ID & PIN"
+            },
+            kn: {
+                badge: "ಅಧಿಕೃತ ರೈತರ ಲಾಗಿನ್",
+                title: "ಕೃಷಿಸೆನ್ಸ್ ಪೋರ್ಟಲ್‌ಗೆ ಸುಸ್ವಾಗತ",
+                subtitle: "ನಿಮ್ಮ ಫಾರ್ಮ್ ಇಂಟೆಲಿಜೆನ್ಸ್ ಪ್ರವೇಶಿಸಲು ಮೊಬೈಲ್ OTP ಅಥವಾ ಕಿಸಾನ್ ID ಬಳಸಿ",
+                tabOtp: "ಮೊಬೈಲ್ & ಒಟಿಪಿ",
+                tabKisan: "ಕಿಸಾನ್ ID & ಪಿನ್"
+            },
+            hi: {
+                badge: "आधिकारिक किसान लॉगिन",
+                title: "कृषिसेंस में आपका स्वागत है",
+                subtitle: "अपनी कृषि बुद्धिमत्ता के लिए मोबाइल OTP या किसान ID से लॉगिन करें",
+                tabOtp: "मोबाइल और OTP",
+                tabKisan: "किसान ID और पिन"
+            },
+            ta: {
+                badge: "அதிகாரப்பூர்வ விவசாயி உள்நுழைவு",
+                title: "கிருஷிசென்ஸ் வரவேற்கிறது",
+                subtitle: "மொபைல் OTP அல்லது கிசான் ஐடி மூலம் உள்நுழைக",
+                tabOtp: "மொபைல் & OTP",
+                tabKisan: "கிசான் ஐடி & பின்"
+            },
+            te: {
+                badge: "అధికారిక రైతు లాగిన్",
+                title: "కృషిసెన్స్‌కు స్వాగతం",
+                subtitle: "మొబైల్ OTP లేదా కిసాన్ ID ద్వారా లాగిన్ అవ్వండి",
+                tabOtp: "మొబైల్ & OTP",
+                tabKisan: "కిసాన్ ID & పిన్"
+            },
+            mr: {
+                badge: "अधिकृत शेतकरी लॉगिन",
+                title: "कृषिसेंस मध्ये आपले स्वागत आहे",
+                subtitle: "मोबाईल OTP किंवा किसान ID द्वारे लॉगिन करा",
+                tabOtp: "मोबाईल आणि OTP",
+                tabKisan: "किसान ID आणि पिन"
+            }
+        };
+
+        function setLanguage(lang) {
+            const pack = loginTranslations[lang] || loginTranslations.en;
+            document.getElementById('portalBadgeText').textContent = pack.badge;
+            document.getElementById('loginMainTitle').textContent = pack.title;
+            document.getElementById('loginSubTitle').textContent = pack.subtitle;
+            document.getElementById('tabOtpLabel').textContent = pack.tabOtp;
+            document.getElementById('tabKisanLabel').textContent = pack.tabKisan;
+        }
+
+        // Switch Tabs
+        function switchLoginTab(tab) {
+            currentTab = tab;
+            const btnOtp = document.getElementById('tabBtnOTP');
+            const btnKisan = document.getElementById('tabBtnKisan');
+            const panelOtp = document.getElementById('panelOTP');
+            const panelKisan = document.getElementById('panelKisan');
+
+            if (tab === 'otp') {
+                btnOtp.classList.add('active');
+                btnOtp.setAttribute('aria-selected', 'true');
+                btnKisan.classList.remove('active');
+                btnKisan.setAttribute('aria-selected', 'false');
+                panelOtp.classList.add('active');
+                panelKisan.classList.remove('active');
+            } else {
+                btnKisan.classList.add('active');
+                btnKisan.setAttribute('aria-selected', 'true');
+                btnOtp.classList.remove('active');
+                btnOtp.setAttribute('aria-selected', 'false');
+                panelKisan.classList.add('active');
+                panelOtp.classList.remove('active');
+            }
+            hideAlert();
+        }
+
+        function showAlert(msg, type = 'error') {
+            const box = document.getElementById('authAlertBox');
+            box.style.display = 'block';
+            box.innerHTML = `
+                <div style="padding:10px 14px; border-radius:var(--radius-md); font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;
+                    ${type === 'error' ? 'background:var(--danger-subtle); color:var(--danger); border:1px solid rgba(239,68,68,0.3);' : 'background:var(--primary-subtle); color:var(--primary); border:1px solid rgba(5,150,105,0.3);'}">
+                    <span>${type === 'error' ? '⚠️' : '✅'}</span>
+                    <span>${msg}</span>
+                </div>
+            `;
+        }
+
+        function hideAlert() {
+            const box = document.getElementById('authAlertBox');
+            box.style.display = 'none';
+        }
+
+        // Handle OTP Request
+        async function handleSendOTP(e) {
+            e.preventDefault();
+            hideAlert();
+            const phoneInput = document.getElementById('farmerMobileInput');
+            const phone = phoneInput.value.trim();
+            const btn = document.getElementById('btnSendOTP');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳ Sending OTP...</span>';
+
+            try {
+                const res = await Auth.sendOTP(phone);
+                activePhone = res.phone;
+
+                // Show OTP verification form
+                document.getElementById('phoneStepForm').style.display = 'none';
+                document.getElementById('otpStepContainer').style.display = 'block';
+                document.getElementById('targetPhoneDisplay').textContent = `${activePhone.slice(0, 5)} ${activePhone.slice(5)}`;
+                
+                // Show simulated SMS preview
+                const code = res.simulated_otp || '123456';
+                document.getElementById('smsOtpCodeDisplay').textContent = code;
+
+                // Auto-fill OTP inputs for smooth developer / test experience
+                fillOtpInputs(code);
+
+                // Start countdown
+                startCountdown(45);
+            } catch (err) {
+                showAlert(err.message || 'Failed to send OTP. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>📲 Get Verification OTP</span>';
+            }
+        }
+
+        function fillOtpInputs(code) {
+            for (let i = 0; i < 6; i++) {
+                const input = document.getElementById(`otp_${i}`);
+                if (input && code[i]) {
+                    input.value = code[i];
+                }
+            }
+            document.getElementById('otp_5')?.focus();
+        }
+
+        function changePhoneNumber() {
+            clearInterval(timerInterval);
+            document.getElementById('phoneStepForm').style.display = 'block';
+            document.getElementById('otpStepContainer').style.display = 'none';
+            document.getElementById('farmerMobileInput').focus();
+            hideAlert();
+        }
+
+        // Handle OTP Verification
+        async function handleVerifyOTP() {
+            hideAlert();
+            let otp = '';
+            for (let i = 0; i < 6; i++) {
+                const input = document.getElementById(`otp_${i}`);
+                otp += (input ? input.value.trim() : '');
+            }
+
+            if (otp.length < 6) {
+                showAlert('Please enter all 6 digits of the OTP.');
+                return;
+            }
+
+            const btn = document.getElementById('btnVerifyOTP');
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳ Verifying OTP...</span>';
+
+            try {
+                const res = await Auth.verifyOTP(activePhone, otp);
+                showAlert(`Welcome back, ${res.user.name}! Redirecting...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+            } catch (err) {
+                showAlert(err.message || 'Incorrect OTP code.');
+                btn.disabled = false;
+                btn.innerHTML = '<span>🚀 Verify & Access Dashboard</span>';
+            }
+        }
+
+        // Handle Resend OTP
+        async function handleResendOTP() {
+            hideAlert();
+            try {
+                const res = await Auth.sendOTP(activePhone);
+                const code = res.simulated_otp || '123456';
+                document.getElementById('smsOtpCodeDisplay').textContent = code;
+                fillOtpInputs(code);
+                showAlert('New OTP sent to your phone!', 'success');
+                startCountdown(45);
+            } catch (err) {
+                showAlert(err.message || 'Failed to resend OTP.');
+            }
+        }
+
+        function startCountdown(seconds) {
+            clearInterval(timerInterval);
+            let left = seconds;
+            const timerDisplay = document.getElementById('countdownTimerDisplay');
+            const resendBtn = document.getElementById('btnResendOTP');
+            const timerPrefix = document.getElementById('timerPrefix');
+
+            timerPrefix.style.display = 'inline';
+            timerDisplay.style.display = 'inline';
+            resendBtn.style.display = 'none';
+
+            timerInterval = setInterval(() => {
+                left--;
+                const mm = String(Math.floor(left / 60)).padStart(2, '0');
+                const ss = String(left % 60).padStart(2, '0');
+                timerDisplay.textContent = `${mm}:${ss}`;
+
+                if (left <= 0) {
+                    clearInterval(timerInterval);
+                    timerPrefix.style.display = 'none';
+                    timerDisplay.style.display = 'none';
+                    resendBtn.style.display = 'inline';
+                }
+            }, 1000);
+        }
+
+        // Handle Kisan ID Login
+        async function handleKisanLogin(e) {
+            e.preventDefault();
+            hideAlert();
+            const kid = document.getElementById('kisanIdInput').value.trim();
+            const pin = document.getElementById('kisanPinInput').value.trim();
+            const btn = document.getElementById('btnKisanSubmit');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳ Verifying Kisan ID...</span>';
+
+            try {
+                const res = await Auth.loginWithKisanId(kid, pin);
+                showAlert(`Authenticated! Welcome, ${res.user.name}. Redirecting...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+            } catch (err) {
+                showAlert(err.message || 'Invalid Kisan ID or PIN.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>🌾 Sign In with Kisan ID</span>';
+            }
+        }
+
+        // 1-Click Quick Demo Login
+        function quickFillAndLogin(kisanId) {
+            const user = Auth.loginAsDemoFarmer(kisanId);
+            showAlert(`Logged in as demo farmer: ${user.name} (${user.district})! Redirecting...`, 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 600);
+        }
+
+        // Setup OTP Box Auto-Advance
+        function setupOtpAutoAdvance() {
+            const inputs = document.querySelectorAll('.otp-digit');
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    e.target.value = val.slice(0, 1);
+                    if (val && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        inputs[index - 1].focus();
+                    } else if (e.key === 'Enter') {
+                        handleVerifyOTP();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                    if (pasted) {
+                        for (let i = 0; i < inputs.length; i++) {
+                            if (pasted[i]) inputs[i].value = pasted[i];
+                        }
+                        inputs[Math.min(pasted.length, inputs.length) - 1].focus();
+                    }
+                });
+            });
+        }
+
+        // Theme Toggle
+        function setupTheme() {
+            const themeBtn = document.getElementById('themeToggleBtn');
+            const savedTheme = localStorage.getItem('krishisense_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeBtn.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+
+            themeBtn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('krishisense_theme', next);
+                themeBtn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupOtpAutoAdvance();
+            setupTheme();
+
+            const langSelect = document.getElementById('loginLangSelect');
+            if (langSelect) {
+                langSelect.addEventListener('change', (e) => {
+                    setLanguage(e.target.value);
+                });
+                setLanguage(langSelect.value);
+            }
+        });
+    </script>
+</body>
+
+</html>

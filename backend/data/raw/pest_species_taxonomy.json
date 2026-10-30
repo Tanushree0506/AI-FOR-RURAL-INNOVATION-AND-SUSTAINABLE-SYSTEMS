@@ -1,0 +1,63 @@
+{
+  "dataset_meta": {
+    "source": "IP102 & ICAR Tropical Pest Diagnostic Benchmark",
+    "version": "2.0.0",
+    "classes_count": 10
+  },
+  "species": [
+    {
+      "id": "pest_01",
+      "name": "Fall Armyworm",
+      "scientific_name": "Spodoptera frugiperda",
+      "severity": "high",
+      "host_crops": ["Maize", "Sorghum", "Rice", "Sugarcane"],
+      "symptoms": "Ragged holes in leaves, excessive sawdust-like frass in leaf whorls, damaged cobs.",
+      "ipm_remedy": "Apply Neem Seed Kernel Extract (NSKE 5%) or Bacillus thuringiensis (Bt @ 2g/L). Release egg parasitoids Trichogramma pretiosum @ 50,000/acre. In acute infestation, spray Emamectin Benzoate 5% SG @ 0.4g/L."
+    },
+    {
+      "id": "pest_02",
+      "name": "Brown Planthopper",
+      "scientific_name": "Nilaparvata lugens",
+      "severity": "high",
+      "host_crops": ["Paddy Rice"],
+      "symptoms": "Hopper burn: Circular patches of dried, brownish-yellow plants resembling fire burn.",
+      "ipm_remedy": "Drain field water for 3-4 days (Alternate Wetting and Drying). Avoid excessive urea. Spray Azadirachtin 1500 ppm @ 2.5 ml/L or Pymetrozine 50% WDG @ 0.6g/L."
+    },
+    {
+      "id": "pest_03",
+      "name": "Yellow Stem Borer",
+      "scientific_name": "Scirpophaga incertulas",
+      "severity": "medium",
+      "host_crops": ["Paddy Rice"],
+      "symptoms": "Dead hearts in vegetative stage and white ears (chaffy panicles) in reproductive stage.",
+      "ipm_remedy": "Clip seedling tips before transplanting. Set up light/pheromone traps @ 5/ha. Release Trichogramma japonicum @ 100,000/ha."
+    },
+    {
+      "id": "pest_04",
+      "name": "Cotton Pink Bollworm",
+      "scientific_name": "Pectinophora gossypiella",
+      "severity": "high",
+      "host_crops": ["Cotton", "Okra"],
+      "symptoms": "Rosetted flowers, bore holes plugged with excreta on bolls, stained lint.",
+      "ipm_remedy": "Install Pheromone traps with Gossyplure @ 10/acre. Release Bracon hebetor. Apply neem oil 10,000 ppm @ 1 ml/L."
+    },
+    {
+      "id": "pest_05",
+      "name": "Gram Pod Borer",
+      "scientific_name": "Helicoverpa armigera",
+      "severity": "high",
+      "host_crops": ["Chickpea", "Pigeonpea", "Tomato"],
+      "symptoms": "Round feeding holes on pods/fruits with half of larval body protruding outside.",
+      "ipm_remedy": "Install bird perches @ 20/acre. Spray HaNPV (Nuclear Polyhedrosis Virus) @ 250 LE/ha or Beauveria bassiana @ 5g/L."
+    },
+    {
+      "id": "pest_06",
+      "name": "Cotton Whitefly",
+      "scientific_name": "Bemisia tabaci",
+      "severity": "medium",
+      "host_crops": ["Cotton", "Chilli", "Tomato"],
+      "symptoms": "Yellowing and curling of leaves, sticky honeydew secretion promoting black sooty mold.",
+      "ipm_remedy": "Install yellow sticky traps @ 15-20/acre. Spray 5% Neem seed oil or spray fungal pathogen Verticillium lecanii @ 5g/L."
+    }
+  ]
+}
